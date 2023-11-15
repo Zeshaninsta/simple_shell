@@ -8,30 +8,32 @@
  *
  * Return: Returns EXIT_SUCCESS on successful completion
  */
+
 int main(void)
 {
-    char *input;
-    int status;
+	int status;
+	char *input;
 
-    do
-    {
-        display_prompt();
-        input = read_line();
-        if (input == NULL)
-        {
-            /* Handle end-of-file condition (Ctrl+D) */
-            printf("\n");
-            break;
-        }
-        /* Remove the trailing newline character */
-        input[strcspn(input, "\n")] = '\0';
+	display_prompt();
 
-        /* Execute the command */
-        status = execute_command(parse_command(input));
+	do {
+		input = read_line();
 
-        /* Free the allocated memory for input */
-        free(input);
-    } while (status);
+		if (input == NULL)
+{
+			/* Handle end-of-file condition (Ctrl+D) */
+			printf("\n");
+			break;
+		}
+		/* Remove the trailing newline character */
+		input[strcspn(input, "\n")] = '\0';
 
-    return (EXIT_SUCCESS);
+		/* Execute the command */
+		status = execute_command(parse_command(input));
+
+		/* Free the allocated memory for input */
+		free(input);
+	} while (status);
+
+	return (EXIT_SUCCESS);
 }

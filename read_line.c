@@ -11,10 +11,9 @@
  */
 char *read_line(void)
 {
-    char *line = NULL;
+	 char *line = NULL;
+	size_t bufsize = 0;
 
-    size_t bufsize = 0;
-
-    getline(&line, &bufsize, stdin);
-    return (line);
+	 getline(&line, &bufsize, stdin);
+	return (line);
 }
