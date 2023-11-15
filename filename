@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LINE_LENGTH 1024
+
+void process_commands(FILE *file) {
+    char line[MAX_LINE_LENGTH];
+
+    while (fgets(line, sizeof(line), file) != NULL) {
+        // Remove newline character
+        line[strcspn(line, "\n")] = '\0';
+
+        // Execute the command (you need to implement this function)
+        // For simplicity, assume execute_command takes a string argument
+        execute_command(line);
+    }
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s [filename]\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    FILE *file = fopen(argv[1], "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        return EXIT_FAILURE;
+    }
+
+    // Process commands from the file
+    process_commands(file);
+
+    fclose(file);
+
+    return EXIT_SUCCESS;
+}
+
