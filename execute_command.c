@@ -1,14 +1,9 @@
 #include "shell.h"
 
- /**
- *execute_command: Execute a command in a new proces.
- * execute_command(char **command) - a command in new pro.
- *
- * This function takes an array of strings representing
- *
- * @param command An array of strings representing
- * the command and its arguments.
- * @return Returns 1 if the command was executed.
+/**
+ * execute_command - Embarks on the epic journey.
+ * @command: The brave warriors (commands).
+ * Return: Returns the triumphant melody.
  */
 
 int execute_command(char **command)
@@ -21,7 +16,6 @@ int execute_command(char **command)
 	pid = fork();
 	if (pid == 0)
 	{
-		/* Child process */
 		if (execvp(command[0], command) == -1)
 		{
 			perror("shell");
@@ -34,7 +28,6 @@ int execute_command(char **command)
 	}
 	else
 	{
-		/* Parent process */
 		do {
 			wpid = waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
@@ -42,3 +35,4 @@ int execute_command(char **command)
 
 	return (1);
 }
+
