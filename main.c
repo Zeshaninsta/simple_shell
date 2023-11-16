@@ -8,25 +8,19 @@
  *
  * Return: Returns EXIT_SUCCESS on successful completion
  */
-
 int main(void)
 {
-	int status;
 	char *input;
-
-	display_prompt();
+	int status;
 
 	do {
+		display_prompt();
 		input = read_line();
-
-		if (input == NULL)
+		if (input == NULL || *input == '\0')
 {
-			/* Handle end-of-file condition (Ctrl+D) */
 			printf("\n");
 			break;
 		}
-		/* Remove the trailing newline character */
-		input[strcspn(input, "\n")] = '\0';
 
 		/* Execute the command */
 		status = execute_command(parse_command(input));
@@ -37,3 +31,4 @@ int main(void)
 
 	return (EXIT_SUCCESS);
 }
+
