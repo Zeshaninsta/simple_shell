@@ -1,44 +1,51 @@
-#include "shell.h"
+#include "custom_shell.h"
 
- /**
- *execute_command: Execute a command in a new proces.
- * execute_command(char **command) - a command in new pro.
- *
- * This function takes an array of strings representing
- *
- * @param command An array of strings representing
- * the command and its arguments.
- * @return Returns 1 if the command was executed.
+
+/**
+ * execute_command - Executes a command in the shell
+ * @input: Contains the command and arguments in the input string
+ * Return: Nothing
  */
-
-int execute_command(char **command)
+void execute_command(char *input)
 {
-	pid_t pid;
-	int status;
-	pid_t wpid;
-	(void)wpid;
+int status;
+pid_t pid;
+int arg_counter;
+char *custom_command;
+char *args[200];
+custom_command = strtok(input, " ");
+args[0] = custom_command;
+arg_counter  = 1;
+while (arg_counter < 199)
+{
+args[arg_counter] = strtok(NULL, " ");
+if (args[arg_counter] == NULL)
+{
+break;
+}
+arg_counter++;
+}
+args[arg_counter] = NULL;
+exit_command(args);
+env_commands(args);
 
-	pid = fork();
-	if (pid == 0)
-	{
-		/* Child process */
-		if (execvp(command[0], command) == -1)
-		{
-			perror("shell");
-		}
-		exit(EXIT_FAILURE);
-	}
-	else if (pid < 0)
-	{
-		perror("shell");
-	}
-	else
-	{
-		/* Parent process */
-		do {
-			wpid = waitpid(pid, &status, WUNTRACED);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
-	}
 
-	return (1);
+if (arg_counter > 0)
+{
+pid = create_process();
+if (pid == 0)
+{
+search_command_in_path(args);
+}
+else if (pid == -1)
+{
+perror("fork");
+exit(1);
+}
+else
+{
+waitpid(pid, &status, 0);
+}
+}
+
 }
