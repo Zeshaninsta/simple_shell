@@ -1,49 +1,45 @@
-#include "custom_shell.h"
+#include "shell.h"
 
 /**
  * execute_command - Executes a command in the shell
- * @input: Contains the command and arguments in the input string
- * Return: Nothing
+ * @command: Contains the command and arguments in the input string
+ *
+ * This function takes a command and its arguments as input and executes it
+ * in the shell. It uses the `fork()` system call to create a child process
+ * and then uses `execvp()` to execute the command in the child process.
+ * The parent process waits for the child process to complete execution.
+ *
+ * Return: Always returns 1.
  */
-void execute_command(char *input)
+
+int execute_command(char **command)
 {
-		int status;
-		pid_t pid;
-		int arg_counter;
-		char *custom_command;
-		char *args[200];
-		custom_command = strtok(input, " ");
-		args[0] = custom_command;
-		arg_counter  = 1;
-		while (arg_counter < 199)
-		{
-				args[arg_counter] = strtok(NULL, " ");
-				if (args[arg_counter] == NULL)
-				{
-						break;
-				}
-				arg_counter++;
-		}
-		args[arg_counter] = NULL;
-		exit_command(args);
-		env_commands(args);
+	pid_t pid;
+	int status;
+	pid_t wpid;
+	(void)wpid;
 
-		if (arg_counter > 0)
+	pid = fork();
+	if (pid == 0)
+	{
+		/* Child process */
+		if (execvp(command[0], command) == -1)
 		{
-				pid = create_process();
-				if (pid == 0)
-				{
-						search_command_in_path(args);
-				}
-				else if (pid == -1)
-				{
-						perror("fork");
-						exit(1);
-				}
-				else
-				{
-						waitpid(pid, &status, 0);
-				}
+			perror("shell");
 		}
+		exit(EXIT_FAILURE);
+	}
+	else if (pid < 0)
+	{
+		perror("shell");
+	}
+	else
+	{
+		/* Parent process */
+		do {
+			wpid = waitpid(pid, &status, WUNTRACED);
+		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	}
+
+	return (1);
 }
-
