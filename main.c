@@ -10,25 +10,26 @@
  */
 int main(void)
 {
-	char *input;
-	int status;
+    char *input;
+    int status;
 
-	do {
-		display_prompt();
-		input = read_line();
-		if (input == NULL || *input == '\0')
-{
-			printf("\n");
-			break;
-		}
+    do
+    {
+        display_prompt();
+        input = read_line();
 
-		/* Execute the command */
-		status = execute_command(parse_command(input));
+        if (input == NULL)
+        {
+            printf("\n");
+            break;
+        }
+        /*Remove the trailing newline character*/
+        input[strcspn(input, "\n")] = '\0';
 
-		/* Free the allocated memory for input */
-		free(input);
-	} while (status);
-
-	return (EXIT_SUCCESS);
+        /*Execute the command*/
+        status = execute_command(parse_command(input));
+        /*Free the allocated memory for input*/
+        free(input);
+    } while (status);
+    return (EXIT_SUCCESS);
 }
-
